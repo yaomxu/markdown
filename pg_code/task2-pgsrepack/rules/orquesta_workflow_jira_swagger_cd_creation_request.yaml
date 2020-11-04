@@ -1,0 +1,21 @@
+---
+    name: "orquesta_workflow_jira_swagger_cd_creation_request"
+    pack: "pgsre"
+    description: "workflow for swagger cd creation request"
+    enabled: true
+    trigger:
+        type: "pgsre.issues_tracker_for_apim_request_isolated"
+    criteria:
+        trigger.fields.customfield_10109.currentStatus.status:
+            type: "equals"
+            #pattern: "Waiting for support"
+            pattern: "In Progress"
+        trigger.fields.customfield_10109.requestType.name:
+          type: "regex"
+          pattern: "(Front|Back)end CICD Request"
+    action:
+        ref: "pgsre.orquesta_workflow_jira_swagger_cd_creation_action"
+        #ref: "pgsre.test"
+        parameters:
+            issue_key: "{{ trigger.issue_key }}"
+            creator: "{{ trigger.fields.creator }}"

@@ -1,0 +1,16 @@
+---
+name: orquesta_workflow_jira_swagger_cd_creation_action
+pack: pgsre
+runner_type: orquesta
+description: "workflow for swagger CD creation request"
+enabled: true
+entry_point: 'workflows/orquesta_workflow_jira_swagger_cd_creation_action.yaml'
+parameters:
+  issue_key:
+    description: jira issue key
+    required: false
+    type: string
+  creator:
+    description: jira creator
+    required: false
+    type: object

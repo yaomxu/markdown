@@ -1,0 +1,11 @@
+---
+name: jenkins_cdProdExecutePermission_action
+runner_type: "python-script"
+description: add leaders to Jenkins job
+enabled: true
+entry_point: 'jenkins_cdProdExecutePermission_action.py'
+parameters:
+  issue_key:
+    description: jira issue key
+    required: true
+    type: string

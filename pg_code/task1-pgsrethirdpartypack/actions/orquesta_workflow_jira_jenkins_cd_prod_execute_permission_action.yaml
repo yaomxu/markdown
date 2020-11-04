@@ -1,0 +1,16 @@
+---
+  name: orquesta_workflow_jira_jenkins_cd_prod_execute_permission_action
+  pack: pgsrethirdparty
+  runner_type: orquesta
+  description: "workflow for jenkins cd prod execute permission for via jira case"
+  enabled: true
+  entry_point: 'workflows/orquesta_workflow_jira_jenkins_cd_prod_execute_permission_action.yaml'
+  parameters:
+    issue_key:
+      description: jira issue key
+      required: true
+      type: string
+    creator:
+      description: creator of jira ticket
+      required: true
+      type: object

@@ -1,0 +1,20 @@
+---
+    name: "orquesta_workflow_jira_jenkins_cd_prod_request"
+    pack: "pgsrethirdparty"
+    description: "workflow for jenkins cd prod execute permission "
+    enabled: true
+    trigger:
+        type: "pgsrethirdparty.issues_tracker_for_third_party_automation"
+    criteria:
+        trigger.fields.customfield_10109.currentStatus.status:
+            type: "equals"
+            pattern: "In Progress"
+        trigger.fields.customfield_11832.value:
+          type: "equals"
+          pattern: "Jenkins CD Prod"
+    action:
+        ref: "pgsrethirdparty.orquesta_workflow_jira_jenkins_cd_prod_execute_permission_action"
+        #ref: "pgsre.test"
+        parameters:
+            issue_key: "{{ trigger.issue_key }}"
+            creator: "{{ trigger.fields.creator }}"

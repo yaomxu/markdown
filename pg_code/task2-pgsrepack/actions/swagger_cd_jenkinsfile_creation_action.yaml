@@ -1,0 +1,11 @@
+---
+name: swagger_cd_jenkinsfile_creation_action
+runner_type: "python-script"
+description: Create Jenkins File for swagger cd job
+enabled: true
+entry_point: 'swagger_cd_jenkinsfile_creation_action.py'
+parameters:
+  issue_key:
+    description: jira issue key
+    required: true
+    type: string

@@ -1,0 +1,42 @@
+version: 1.0
+
+description: orquesta workflow for getting kubernetes read and exec token.
+
+input:
+  - issue_key
+  - creator
+
+
+vars:
+  - comment_text_success: "Your Jenkins cd prod execute permission has been done successfully.
+                           Please enjoy it! If you find any problems about the permissions, please contact SRE team"
+
+  - comment_text_failed: "Process failed!"
+  - stdout: null
+  - stderr: null
+  - default_error_message: ""
+
+tasks:
+  task_update_action:
+    action:  pgsrethirdparty.jenkins_cdProdExecutePermission_action issue_key=<% ctx(issue_key) %>
+    next:
+      - when: <% succeeded() %>
+        publish:
+        - stdout: <% result().result %>
+        do:
+          - task_add_comment_in_issus_success
+      - when: <% failed() %>
+        publish:
+        - stderr: <% result().result %>
+        do:
+          - task_add_comment_in_issus_failed
+  task_add_comment_in_issus_success:
+    action: pgsrethirdparty.comment_issue comment_text=<% ctx(comment_text_success) %> issue_key=<% ctx(issue_key) %> creator=<% ctx(creator) %>  error_message=<% ctx(stdout) %>
+
+  task_add_comment_in_issus_failed:
+    action: pgsrethirdparty.comment_issue comment_text=<% ctx(comment_text_failed) %> issue_key=<% ctx(issue_key) %> creator=<% ctx(creator) %>  error_message=<% ctx(stderr) %>
+
+
+output:
+  - stdout: <% ctx(stdout) %>
+  - stderr: <% ctx(stderr) %>

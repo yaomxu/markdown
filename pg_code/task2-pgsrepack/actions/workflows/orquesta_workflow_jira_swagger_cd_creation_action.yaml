@@ -1,0 +1,53 @@
+version: 1.0
+
+description: orquesta workflow for CICD request
+
+input:
+  - issue_key
+  - creator
+
+vars:
+  - comment_text_success: "Your cd creation request has been done successfully."
+  - comment_text_failed: "Process failed!"
+  - stdout: null
+  - stderr: null
+  - default_error_message: ""
+
+tasks:
+  task_cd_action:
+    action:  pgsre.cicd_cd_creation_action issue_key=<% ctx(issue_key) %>
+    next:
+      - when: <% succeeded() %>
+        publish:
+          - cd_job: <% result().result %>
+        do:
+          - task_jf_action
+      - when: <% failed() %>
+        publish:
+          - stderr: <% result().result %>
+        do:
+          - task_add_comment_in_issus_failed
+  task_jf_action:
+    action:  pgsre.swagger_cd_jenkinsfile_creation_action issue_key=<% ctx(issue_key) %>
+    next:
+      - when: <% succeeded() %>
+        publish:
+          - stdout: <% result().stdout %>
+        do:
+          - task_add_comment_in_issus_success
+      - when: <% failed() %>
+        publish:
+          - stderr: <% result().result %>
+        do:
+          - task_add_comment_in_issus_failed
+  task_add_comment_in_issus_success:
+    action: pgsre.cicd_comment_issue comment_text=<% ctx(comment_text_success) %> issue_key=<% ctx(issue_key) %> creator=<% ctx(creator) %>  error_message="<% ctx(ci_job) %>,<% ctx(cd_job) %>"
+
+  task_add_comment_in_issus_failed:
+    action: pgsre.cicd_comment_issue comment_text=<% ctx(comment_text_failed) %> issue_key=<% ctx(issue_key) %> creator=<% ctx(creator) %>  error_message=<% ctx(stderr) %>
+
+
+output:
+  - stdout: <% ctx(stdout) %>
+  - stderr: <% ctx(stderr) %>
+

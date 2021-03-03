@@ -2,12 +2,7 @@ import base64, requests, json
 from github import Github
 from github_lib import *
 
-token = "5c895a1ff280a1a9ecb26776f9268b906116fa3a"
-domain = 'https://github.cn-pgcloud.com'
-git_handle = github_operation(domain=domain,token=token)
-user = "paasRobotAdmin"
-org1 = "test1"
-org2 = "media"
+
 try:
     org = git_handle.handler.get_organization(org2)
     print(org)
